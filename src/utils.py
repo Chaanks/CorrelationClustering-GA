@@ -9,7 +9,7 @@ def read_file_test(file):
             x = x.split()
             start = int(x[0])
             end = int(x[1])
-            weight = int(x[2])
+            weight = float(x[2])
             #G.add_edge(start, end, data={"affinity" :weight, "visited": False})
             G.add_edge(start, end, affinity=weight)
             #print(G[start][end]['affinity'])

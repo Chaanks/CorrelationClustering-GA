@@ -46,7 +46,6 @@ class Population:
         return self.individuals[np.random.choice(len(self.individuals), p=inv_probs)]
 
 
-
     def __str__(self):
         buff = ''
         for idx, i in enumerate(self.individuals):

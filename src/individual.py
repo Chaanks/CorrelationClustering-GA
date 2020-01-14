@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 
 from utils import random_solution, positive_solution
 
@@ -35,6 +36,22 @@ class Individual:
 
     def get_fitness(self):
         return self.fitness
+
+    
+    def add_cluster(self):
+        if self.size < len(self.genes):
+            r = np.random.randint(0, len(self.genes))
+            self.genes[r] = self.size
+            self.size += 1
+
+
+    def sub_cluster(self):
+        if self.size > 2:
+            for i in range(len(self.genes)):
+                if self.genes[i] == self.size-1:
+                    r = np.random.randint(0, self.size-1)
+                    self.genes[i] = r    
+            self.size -= 1
 
 
     def __str__(self):
