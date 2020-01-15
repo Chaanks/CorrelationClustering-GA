@@ -22,7 +22,7 @@ def draw(G, partition, nb_cluster):
     labels = nx.get_edge_attributes(G, 'affinity')
     pos = nx.spring_layout(G)
     nx.draw_networkx(G, pos, node_color=colors,alpha=0.9, width=1, linewidths=2)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size= 12, font_color='red')
+    #nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size= 12, font_color='red')
     plt.show()
 
 

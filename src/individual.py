@@ -47,11 +47,26 @@ class Individual:
 
     def sub_cluster(self):
         if self.size > 2:
+            r = np.random.randint(0, self.size-1)
             for i in range(len(self.genes)):
-                if self.genes[i] == self.size-1:
-                    r = np.random.randint(0, self.size-1)
-                    self.genes[i] = r    
+                if self.genes[i] == r:
+                    new_cluster = np.random.randint(0, self.size-1)
+                    while new_cluster == r:
+                        new_cluster = np.random.randint(0, self.size-1)
+                    self.genes[i] = new_cluster
             self.size -= 1
+
+
+    def remap(self):
+        dic = {}
+        cpt = 0
+
+        for i in range(len(self.genes)):
+            if  self.genes[i] not in dic:
+                dic[self.genes[i]] = cpt
+                cpt += 1
+
+            self.genes[i] = dic[self.genes[i]]
 
 
     def __gt__(self, idl):
