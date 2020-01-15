@@ -95,4 +95,4 @@ class Individual:
 
 
     def __str__(self):
-        return '\tsize : ' + str(self.size) + '\n\tgenes : ' + str(self.genes) + ' \n\tfitness = ' + str(self.fitness) +  ' method ' + self.method + '\n'
+        return '\tsize : ' + str(self.size) + '\n\tgenes : ' + str(self.genes) + ' \n\tfitness = ' + str(self.fitness) +  ' method -> ' + self.method + '\n'

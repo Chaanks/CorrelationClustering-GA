@@ -17,17 +17,17 @@ class GA:
     def __init__(self, G):
         self.G = G
         self.population = Population(G, POPULATION_SIZE)
-        self.generation = 1
+        self.generation = 0
         self.fittest = None
         self.bench = []
 
     def step(self):
         self.compute_fitness()
-        if self.generation % 100 == 0:
-            self.show()
         if self.generation % 10 == 0:
             self.fittest = self.population.get_fittest()
             self.bench.append(self.fittest.get_fitness())
+        if self.generation % 100 == 0:
+            self.show()
         self.crossover()
         self.mutation()
         self.generation += 1
@@ -42,7 +42,7 @@ class GA:
         c = input('show ? : ')
         if c == 'y' or c == 'yes':
             plt.figure()
-            plt.plot([i for i in range(1, self.generation, 11)], self.bench)
+            plt.plot([i for i in range(0, self.generation+1, 10)], self.bench)
             plt.xlabel('iteration')
             plt.ylabel('score')
             plt.show()
