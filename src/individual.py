@@ -54,5 +54,13 @@ class Individual:
             self.size -= 1
 
 
+    def __gt__(self, idl):
+        return self.fitness > idl.get_fitness()
+
+
+    def __add__(self, idl): 
+        return self.fitness + idl.get_fitness()
+
+
     def __str__(self):
         return '\tsize : ' + str(self.size) + '\n\tgenes : ' + str(self.genes) + ' \n\tfitness = ' + str(self.fitness) + '\n'

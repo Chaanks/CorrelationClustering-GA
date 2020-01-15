@@ -37,14 +37,13 @@ class Population:
         return fittest
 
 
-    def wheel_selection(self):
-        m = sum([i.get_fitness() for i in self.individuals])
-        probs = [1/(i.get_fitness()/m) for i in self.individuals]
+    def wheel_selection(self, size):
+        pool = np.partition(self.individuals, size)[:size]
+        m = sum([i.get_fitness() for i in pool])
+        probs = [1/(i.get_fitness()/m) for i in pool]
         m = sum(probs)
         inv_probs = [i/m for i in probs]
-        #print(inv_probs, sum(inv_probs))
-        return self.individuals[np.random.choice(len(self.individuals), p=inv_probs)]
-
+        return self.individuals[np.random.choice(len(pool), p=inv_probs)]
 
     def __str__(self):
         buff = ''
