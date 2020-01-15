@@ -28,7 +28,7 @@ class GA:
         if self.generation % 10 == 0:
             self.fittest = self.population.get_fittest()
             self.bench.append(self.fittest.get_fitness())
-        self.crossover_test()
+        self.crossover()
         self.mutation()
         self.generation += 1
     
@@ -58,72 +58,6 @@ class GA:
     
 
     def crossover(self):
-        p1 = self.selection()
-        p2 = self.selection()
-        for i in range(self.population.population_size):
-            # remap to get same cluster order
-            p1.remap()
-            p2.remap()
-            
-            #print(p1)
-            #print(p2)
-            # child is parent 1
-            self.population.individuals[i].genes = np.copy(p1.genes)
-            self.population.individuals[i].size = p1.size
-
-            for j in range(len(self.population.individuals[i].genes)):
-                r = np.random.randint(0, 2)
-                gene = self.population.individuals[i].genes[j]
-                genes_size = self.population.individuals[i].size
-                # insert parent 2 gene in child
-                if r == 1:
-                    next_gene = p2.genes[j]
-                
-                    # case node cluster is not in child
-                    if next_gene > genes_size:
-                        # case we add a cluster -- pb lot of cluster with only 1 node
-                        #self.population.individuals[i].genes[j] = genes_size
-                        #self.population.individuals[i].size += 1
-                        #case we add the node in a random cluster
-                        if genes_size > 1:
-                            r = np.random.randint(0, genes_size-1)
-                            self.population.individuals[i].genes[j] = r
-                    else:
-                        self.population.individuals[i].genes[j] = next_gene
-
-            #print(self.population.individuals[i])
-            #a = input()
-
-
-    def crossover_slice(self):
-        p1 = self.selection()
-        p2 = self.selection()
-        while p1 == p2:
-            print('fuck')
-            p2 = self.selection()
-        for i in range(self.population.population_size):
-            # remap to get same cluster order
-            p1.remap()
-            p2.remap()
-
-            # child is parent 1
-            self.population.individuals[i].genes = np.copy(p1.genes)
-            self.population.individuals[i].size = p1.size
-
-            start = np.random.randint(0, len(p1.genes))
-            end = np.random.randint(0, len(p1.genes))
-            while start == end:
-                start = np.random.randint(0, len(p1.genes))
-                end = np.random.randint(0, len(p1.genes))            
-            if start > end:
-                start , end = end, start
-            for j in range(start, end+1):
-                self.population.individuals[i].genes[j] = p2.genes[j]
-            
-            self.population.individuals[i].remap()
-
-
-    def crossover_test(self):
         new_pop = Population(self.G, POPULATION_SIZE, empty=True)
         for i in range(self.population.population_size):
             p1 = self.selection()
