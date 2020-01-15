@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+from random import randrange
 
 from utils import random_solution, positive_solution
 
@@ -7,14 +8,17 @@ from utils import random_solution, positive_solution
 class Individual:
 
     def __init__(self, G, method='random'):
-        self.genes = None
+        self.genes = []
         self.size = 0
         self.fitness = 0
+        self.method = None
 
         if method == 'random':
             self.genes, self.size = random_solution(G)
+            self.method = 'random'
         elif method == 'positive':
             self.genes, self.size = positive_solution(G)
+            self.method = 'positive'
 
     
     def compute_fitness(self, G):
@@ -57,16 +61,29 @@ class Individual:
             self.size -= 1
 
 
+    def rand_cluster(self):
+        r = [ np.random.randint(0, len(self.genes)-1) for i in range(2)]
+        for i in r:
+            self.genes[i] = r = np.random.randint(0, self.size-1)
+        self.remap()
+
+
+    def random_modification(self):
+        r = np.random.randint(0, len(self.genes))
+        self.genes[r] = np.random.randint(0, self.size-1)
+        self.remap()
+
+
     def remap(self):
         dic = {}
         cpt = 0
-
         for i in range(len(self.genes)):
             if  self.genes[i] not in dic:
                 dic[self.genes[i]] = cpt
                 cpt += 1
 
             self.genes[i] = dic[self.genes[i]]
+        self.size = cpt
 
 
     def __gt__(self, idl):
@@ -78,4 +95,4 @@ class Individual:
 
 
     def __str__(self):
-        return '\tsize : ' + str(self.size) + '\n\tgenes : ' + str(self.genes) + ' \n\tfitness = ' + str(self.fitness) + '\n'
+        return '\tsize : ' + str(self.size) + '\n\tgenes : ' + str(self.genes) + ' \n\tfitness = ' + str(self.fitness) +  ' method ' + self.method + '\n'

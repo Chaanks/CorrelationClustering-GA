@@ -6,15 +6,16 @@ from individual import Individual
 
 class Population:
 
-    def __init__(self, G, size):
+    def __init__(self, G, size, empty=False):
         self.population_size = size
         self.individuals = np.empty(size, dtype=np.object)
 
-        for i in range(len(self.individuals)):
-            if i%2 == 0:
+        if not empty:
+            for i in range(len(self.individuals)):
+                #if i%5 == 0:
+                #    self.individuals[i] = Individual(G, method='random')
+                #else:
                 self.individuals[i] = Individual(G, method='positive')
-            else:
-                self.individuals[i] = Individual(G, method='random')
     
 
     def compute_fitness(self, G):
@@ -43,7 +44,7 @@ class Population:
         probs = [1/(i.get_fitness()/m) for i in pool]
         m = sum(probs)
         inv_probs = [i/m for i in probs]
-        return self.individuals[np.random.choice(len(pool), p=inv_probs)]
+        return pool[np.random.choice(len(pool), p=inv_probs)]
 
     def __str__(self):
         buff = ''

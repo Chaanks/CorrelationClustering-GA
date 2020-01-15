@@ -36,7 +36,6 @@ def test_population():
     print(p1.wheel_selection())
 
 
-
 def test_genetic_algorithm():
     G = read_file_test('../data/data_30_218.txt')
     ga = GA(G)
@@ -55,6 +54,13 @@ def test_mutation():
     ga.mutation()
 
 
+def test_crossover():
+    G = read_file_test('../data/data.txt')
+    ga = GA(G)
+    ga.compute_fitness()
+    ga.crossover_slice()
+
 #test_individual()
 test_genetic_algorithm()
 #test_mutation()
+#test_crossover()
