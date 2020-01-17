@@ -29,23 +29,18 @@ def test_individual():
 
 
 def test_population():
+    G = read_file_test('../data/data.txt')
     p1 = Population(G, 3)
     p1.compute_fitness(G)
     print(p1)
     print(p1.get_fittest())
-    print(p1.wheel_selection())
+    print(p1.wheel_selection(10))
 
 
 def test_genetic_algorithm():
-    G = read_file_test('../data/data_30_218.txt')
+    G = read_file_test('../data/file_200_0.1.g')
     ga = GA(G)
-    for i in range(1000):
-        ga.step()
-    
-    while 1:
-        i = input()
-        if i == 's':
-            break
+    ga.evolve()
 
 
 def test_mutation():
@@ -58,7 +53,6 @@ def test_crossover():
     G = read_file_test('../data/data.txt')
     ga = GA(G)
     ga.compute_fitness()
-    ga.crossover_slice()
 
 #test_individual()
 test_genetic_algorithm()

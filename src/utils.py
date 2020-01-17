@@ -7,8 +7,8 @@ def read_file_test(file):
     for x in open(file, "r"):
         if (len(x) > 1):
             x = x.split()
-            start = int(x[0])
-            end = int(x[1])
+            start = int(x[0]) -1
+            end = int(x[1]) -1
             weight = float(x[2])
             #G.add_edge(start, end, data={"affinity" :weight, "visited": False})
             G.add_edge(start, end, affinity=weight)
@@ -19,7 +19,7 @@ def read_file_test(file):
 def draw(G, partition, nb_cluster):
     colors = list(plt.cm.rainbow(np.linspace(0, 1, nb_cluster)))
     colors = [colors[i] for i in partition.tolist()]
-    labels = nx.get_edge_attributes(G, 'affinity')
+    #labels = nx.get_edge_attributes(G, 'affinity')
     pos = nx.spring_layout(G)
     nx.draw_networkx(G, pos, node_color=colors,alpha=0.9, width=1, linewidths=2)
     #nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size= 12, font_color='red')
