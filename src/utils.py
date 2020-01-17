@@ -2,13 +2,15 @@ import networkx as nx
 import numpy as np 
 import matplotlib.pyplot as plt
 
-def read_file_test(file):
+def read_file(file):
     G = nx.Graph()
     for x in open(file, "r"):
+        offset = 0
+        if int(x[0]) == 1 : offset = 1
         if (len(x) > 1):
             x = x.split()
-            start = int(x[0]) -1
-            end = int(x[1]) -1
+            start = int(x[0]) - offset
+            end = int(x[1]) - offset
             weight = float(x[2])
             #G.add_edge(start, end, data={"affinity" :weight, "visited": False})
             G.add_edge(start, end, affinity=weight)

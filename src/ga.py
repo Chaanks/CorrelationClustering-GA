@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 import copy 
 
-from utils import read_file_test, draw
+from utils import draw
 from population import Population
 
 
@@ -32,7 +32,8 @@ class GA:
                     self.bench.append(self.fittest.get_fitness())
                 self.crossover()
                 self.mutation()
-                self.generation = i
+                self.generation += 1
+            print(i, len(self.bench))
             stop = self.ask()
             if stop : break
     
@@ -43,20 +44,24 @@ class GA:
 
     def ask(self):
         print('Iteration : ' + str(self.generation) + '\nFittest : \n' + str(self.fittest))
-        c = input('$ ')
-        if c == 'y' or c == 'yes':
-            plt.figure()
-            plt.plot([i for i in range(0, self.generation+1, 10)], self.bench)
-            plt.xlabel('iteration')
-            plt.ylabel('score')
-            plt.show()
-            #draw(self.G, self.fittest.genes, self.fittest.size)
-        if c == 'top':
-            top = np.partition(self.population.individuals, 10)[:10]
-            for i in top:
-                print(i)
-        if c == 'stop':
-            return True
+        while 1:
+            c = input('$ ')
+            if c == 'graph':
+                draw(self.G, self.fittest.genes, self.fittest.size)
+            if c == 'show' or c == 'score':
+                plt.figure()
+                plt.plot([i for i in range(0, self.generation, 10)], self.bench)
+                plt.xlabel('iteration')
+                plt.ylabel('score')
+                plt.show()
+            if c == 'top':
+                top = np.partition(self.population.individuals, 5)[:5]
+                for i in top:
+                    print(i)
+            if c == 'stop':
+                return True
+            if c == 'next' or c == '' or c == 'n':
+                return False
 
 
     def selection(self):
