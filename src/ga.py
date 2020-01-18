@@ -1,9 +1,10 @@
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import copy 
 
-from utils import read_file_test, draw
+from utils import draw
 from population import Population
 
 
@@ -21,36 +22,46 @@ class GA:
         self.fittest = None
         self.bench = []
 
-    def step(self):
-        self.compute_fitness()
-        if self.generation % 10 == 0:
-            self.fittest = self.population.get_fittest()
-            self.bench.append(self.fittest.get_fitness())
-        if self.generation % 100 == 0:
-            self.show()
-        self.crossover()
-        self.mutation()
-        self.generation += 1
+    def evolve(self):
+        while 1:
+            it = input('Iteration : ')
+            for i in tqdm(range(int(it))):
+                self.compute_fitness()
+                if i % 10 == 0:
+                    self.fittest = self.population.get_fittest()
+                    self.bench.append(self.fittest.get_fitness())
+                self.crossover()
+                self.mutation()
+                self.generation += 1
+            print(i, len(self.bench))
+            stop = self.ask()
+            if stop : break
     
 
     def compute_fitness(self):
         self.population.compute_fitness(self.G)
 
 
-    def show(self):
+    def ask(self):
         print('Iteration : ' + str(self.generation) + '\nFittest : \n' + str(self.fittest))
-        c = input('show ? : ')
-        if c == 'y' or c == 'yes':
-            plt.figure()
-            plt.plot([i for i in range(0, self.generation+1, 10)], self.bench)
-            plt.xlabel('iteration')
-            plt.ylabel('score')
-            plt.show()
-            draw(self.G, self.fittest.genes, self.fittest.size)
-        if c == 'top':
-            top = np.partition(self.population.individuals, 10)[:10]
-            for i in top:
-                print(i)
+        while 1:
+            c = input('$ ')
+            if c == 'graph':
+                draw(self.G, self.fittest.genes, self.fittest.size)
+            if c == 'show' or c == 'score':
+                plt.figure()
+                plt.plot([i for i in range(0, self.generation, 10)], self.bench)
+                plt.xlabel('iteration')
+                plt.ylabel('score')
+                plt.show()
+            if c == 'top':
+                top = np.partition(self.population.individuals, 5)[:5]
+                for i in top:
+                    print(i)
+            if c == 'stop':
+                return True
+            if c == 'next' or c == '' or c == 'n':
+                return False
 
 
     def selection(self):
