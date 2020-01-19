@@ -6,7 +6,7 @@ import copy
 
 from utils import draw
 from population import Population
-
+from benchmark import Benchmark
 
 POPULATION_SIZE = 128
 WHEEL_SIZE = 8
@@ -15,12 +15,13 @@ MUTATION_RATE = 0.3
 
 class GA:
 
-    def __init__(self, G):
+    def __init__(self, G, filepath):
+        self.benchmark = Benchmark(filepath)
         self.G = G
         self.population = Population(G, POPULATION_SIZE)
         self.generation = 0
         self.fittest = None
-        self.bench = []
+
 
     def evolve(self):
         while 1:
@@ -29,11 +30,11 @@ class GA:
                 self.compute_fitness()
                 if i % 10 == 0:
                     self.fittest = self.population.get_fittest()
-                    self.bench.append(self.fittest.get_fitness())
+                    self.benchmark.add(self.fittest.get_fitness())
+                    self.benchmark.write('Iteration ' + str(self.generation) + ' Fittest ' + str(self.fittest.fitness))
                 self.crossover()
                 self.mutation()
                 self.generation += 1
-            print(i, len(self.bench))
             stop = self.ask()
             if stop : break
     
@@ -50,7 +51,7 @@ class GA:
                 draw(self.G, self.fittest.genes, self.fittest.size)
             if c == 'show' or c == 'score':
                 plt.figure()
-                plt.plot([i for i in range(0, self.generation, 10)], self.bench)
+                plt.plot([i for i in range(0, self.generation, 10)], self.benchmark.scores)
                 plt.xlabel('iteration')
                 plt.ylabel('score')
                 plt.show()
@@ -75,7 +76,7 @@ class GA:
             p2 = self.selection()
             while p1 == p2:
                 p2 = self.selection()
-            # remap to get same cluster order
+            # map genes to get same cluster order
             p1.remap()
             p2.remap()
 
@@ -95,8 +96,6 @@ class GA:
 
    
     def mutation(self):
-        
-        # add cluster
         for i in range(self.population.population_size):
             r = np.random.uniform(0, 1)
             
@@ -108,6 +107,4 @@ class GA:
                 else:
                     self.population.individuals[i].sub_cluster()
             
-
                 self.population.individuals[i].rand_cluster()
-                #self.population.individuals[i].random_modification()

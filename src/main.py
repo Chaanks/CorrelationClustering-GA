@@ -1,6 +1,10 @@
+import sys
 from utils import read_file
 from ga import GA
 
-G = read_file('../data/file_200_0.1.g')
-ga = GA(G)
+
+filepath = sys.argv[1]
+print('graph : ', filepath)
+G = read_file('../data/' + filepath)
+ga = GA(G, filepath)
 ga.evolve()
