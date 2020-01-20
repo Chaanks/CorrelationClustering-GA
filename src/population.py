@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import copy 
 
 from individual import Individual
 
@@ -9,13 +10,14 @@ class Population:
     def __init__(self, G, size, empty=False):
         self.population_size = size
         self.individuals = np.empty(size, dtype=np.object)
+        self.selections = []
 
         if not empty:
             for i in range(len(self.individuals)):
                 #if i%5 == 0:
-                #    self.individuals[i] = Individual(G, method='random')
                 #else:
-                self.individuals[i] = Individual(G, method='positive')
+                self.individuals[i] = Individual(G, method='random')
+                #self.individuals[i] = Individual(G, method='positive')
     
 
     def compute_fitness(self, G):
@@ -38,13 +40,19 @@ class Population:
         return fittest
 
 
-    def wheel_selection(self, size):
+    def selection(self, size):
         pool = np.partition(self.individuals, size)[:size]
-        m = sum([i.get_fitness() for i in pool])
-        probs = [1/(i.get_fitness()/m) for i in pool]
+        for p in pool:
+            self.selections.append(copy.deepcopy(p))
+
+
+    def wheel_selection(self, size):
+        m = sum([i.get_fitness() for i in self.selections])
+        probs = [1/(i.get_fitness()/m) for i in self.selections]
         m = sum(probs)
         inv_probs = [i/m for i in probs]
-        return pool[np.random.choice(len(pool), p=inv_probs)]
+        return self.selections[np.random.choice(len(self.selections), p=inv_probs)]
+
 
     def __str__(self):
         buff = ''

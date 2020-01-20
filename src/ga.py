@@ -8,8 +8,8 @@ from utils import draw
 from population import Population
 from benchmark import Benchmark
 
-POPULATION_SIZE = 128
-WHEEL_SIZE = 8
+POPULATION_SIZE = 150
+WHEEL_SIZE = 10
 MUTATION_RATE = 0.3
 
 
@@ -30,6 +30,7 @@ class GA:
                 self.compute_fitness()
                 if i % 10 == 0:
                     self.fittest = self.population.get_fittest()
+                    print(self.fittest)
                     self.benchmark.add(self.fittest.get_fitness())
                     self.benchmark.write('Iteration ' + str(self.generation) + ' Fittest ' + str(self.fittest.fitness))
                 self.crossover()
@@ -70,7 +71,8 @@ class GA:
     
 
     def crossover(self):
-        new_pop = Population(self.G, POPULATION_SIZE, empty=True)
+        self.population.selection(WHEEL_SIZE)
+        #new_pop = Population(self.G, POPULATION_SIZE, empty=True)
         for i in range(self.population.population_size):
             p1 = self.selection()
             p2 = self.selection()
@@ -79,32 +81,30 @@ class GA:
             # map genes to get same cluster order
             p1.remap()
             p2.remap()
-
+            
             # child is parent 1
-            new_pop.individuals[i] = copy.deepcopy(p1)
+            self.population.individuals[i] = copy.deepcopy(p1)
 
             size = np.random.randint(0, len(p1.genes)//2)
             start = np.random.randint(0, len(p1.genes)-size)
             end = start + size
 
             for j in range(start, end):
-                new_pop.individuals[i].genes[j] = p2.genes[j]
+                self.population.individuals[i].genes[j] = p2.genes[j]
             
-            new_pop.individuals[i].remap()
-
-        self.population = new_pop
+            self.population.individuals[i].remap()
 
    
     def mutation(self):
         for i in range(self.population.population_size):
             r = np.random.uniform(0, 1)
-            
+            if r >= 0.5:
+                self.population.individuals[i].random_positive()
             if MUTATION_RATE > r:
-
+    
                 r = np.random.uniform(0, 1)
-                if r < 0.5:
-                    self.population.individuals[i].add_cluster()
-                else:
+                if r <= 0.5:
                     self.population.individuals[i].sub_cluster()
+                else:
+                    self.population.individuals[i].add_cluster()
             
-                self.population.individuals[i].rand_cluster()
